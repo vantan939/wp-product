@@ -1,0 +1,27 @@
+.wrap {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.post-upload {
+    font-size: 14px;
+}
+
+.post-upload input[type="text"], textarea {
+    outline: none;
+    padding: 9px 14px;
+}
+
+.post-upload input[type="checkbox"] {
+    outline: none;
+}
+
+.post-upload select {
+    outline: none;
+    border-color: #dcd7ca;
+    padding: 10px 15px 10px 10px;
+}
+
+.post-upload .post-field {
+    margin-bottom: 15px;
+}

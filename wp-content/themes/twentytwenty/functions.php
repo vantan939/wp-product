@@ -192,6 +192,7 @@ function twentytwenty_register_styles() {
 
 	// Add print CSS.
 	wp_enqueue_style( 'twentytwenty-print-style', get_template_directory_uri() . '/print.css', null, $theme_version, 'print' );
+	wp_enqueue_style( 'custom-css', get_template_directory_uri() . '/assets/css/custom.css', null, $theme_version );
 
 }
 
@@ -754,3 +755,10 @@ function twentytwenty_get_elements_array() {
 	*/
 	return apply_filters( 'twentytwenty_get_elements_array', $elements );
 }
+
+function include_jQuery() {
+    if (!is_admin()) {
+        wp_enqueue_script('jquery');
+    }
+}
+add_action('init', 'include_jQuery');
