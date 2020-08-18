@@ -7,6 +7,21 @@
     font-size: 14px;
 }
 
+.post-upload span.rq {
+    color: #ff0000;
+}
+
+.post-upload .error {
+    color: #ff0000;
+    margin-top: 4px;
+}
+
+.post-upload .success {
+    color: #3be23b;
+    margin-top: 4px;
+    font-size: 16px;
+}
+
 .post-upload input[type="text"], textarea {
     outline: none;
     padding: 9px 14px;
@@ -23,5 +38,21 @@
 }
 
 .post-upload .post-field {
-    margin-bottom: 15px;
+    margin-bottom: 17px;
+}
+
+.post-upload button {
+    text-decoration: none;
+    position: relative;
+    outline: none;
+}
+
+.post-upload button.submiting:after {
+    background-image: url(../images/ajax-loader.gif);
+    width: 16px;
+    height: 16px;
+    content: '';
+    position: absolute;
+    left: 106%;
+    top: 23px;
 }

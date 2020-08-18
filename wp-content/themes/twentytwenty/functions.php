@@ -212,6 +212,8 @@ function twentytwenty_register_scripts() {
 	wp_enqueue_script( 'twentytwenty-js', get_template_directory_uri() . '/assets/js/index.js', array(), $theme_version, false );
 	wp_script_add_data( 'twentytwenty-js', 'async', true );
 
+	wp_enqueue_script( 'custom-js', get_template_directory_uri() . '/assets/js/custom.js', array(), $theme_version, false );
+	wp_script_add_data( 'custom-js', 'async', true );
 }
 
 add_action( 'wp_enqueue_scripts', 'twentytwenty_register_scripts' );
@@ -756,9 +758,68 @@ function twentytwenty_get_elements_array() {
 	return apply_filters( 'twentytwenty_get_elements_array', $elements );
 }
 
+// =============================
 function include_jQuery() {
     if (!is_admin()) {
         wp_enqueue_script('jquery');
     }
 }
 add_action('init', 'include_jQuery');
+
+/**
+* Upload post product
+**/
+// Submit Dang bai
+function update_acf_fields($request, $id_post) {
+	update_field('price', $request['price'], $id_post);
+	update_field('phone', $request['phone'], $id_post);
+	update_field('description', $request['description'], $id_post);
+	update_field('year', $request['year'], $id_post);
+	update_field('height', $request['height'], $id_post);
+	update_field('weight', $request['weight'], $id_post);
+	update_field('params', $request['params'], $id_post);
+	update_field('country', $request['country'], $id_post);
+	update_field('address', $request['address'], $id_post);
+	update_field('time', $request['time'], $id_post);
+	update_field('service', $request['service'], $id_post);
+}
+
+function update_cat_field($request, $id_post) {
+	wp_set_post_categories($id_post, $request['category']);	
+}
+
+function update_product_checkbox_field($request, $id_post) {
+	if(isset($request['hot'])) {
+		update_field('hot', 1, $id_post);
+	}
+	if(isset($request['confirmed'])) {
+		update_field('confirmed', 1, $id_post);
+	}
+	if(isset($request['confirmed_copy'])) {
+		update_field('confirmed_copy', 1, $id_post);
+	}	
+}
+
+function upload_post_product() {
+	$result = array();
+	if($_SERVER['REQUEST_METHOD'] === 'POST') {
+		// print_r($_REQUEST);
+		// return;
+		$post_array = array(
+			'post_title' => wp_strip_all_tags( $_POST['title'] ),
+			'post_content' => '<!-- wp:paragraph -->'.$_REQUEST['content'].'<!-- /wp:paragraph -->',
+			'post_status'   => 'publish'
+		);
+		$id_post = wp_insert_post($post_array);
+		update_acf_fields($_REQUEST, $id_post);
+		update_cat_field($_REQUEST, $id_post);
+		update_product_checkbox_field($_REQUEST, $id_post);
+		$result['success'] = 1;
+	}else {
+		$result['success'] = 0;
+	}
+
+	die(json_encode($result));
+}
+add_action( 'wp_ajax_upload_post_product', 'upload_post_product' );
+add_action( 'wp_ajax_nopriv_upload_post_product', 'upload_post_product' );
