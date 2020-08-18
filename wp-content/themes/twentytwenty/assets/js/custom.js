@@ -26,16 +26,21 @@ jQuery(document).ready(function($) {
         }
         
         $this.find('button').addClass('submiting');
+        var formData = new FormData(this);
+        formData.append('action', 'upload_post_product');
         $.ajax({
             type: 'post',
             url: admin_ajax_url,
-            data: $this.serialize() + "&action=upload_post_product",
-            dataType: 'JSON',
+            data: formData,
+            processData: false,
+            contentType: false,
+            // dataType: 'JSON',
             success: function (result) {
                 if(result.success) {
                     $this.find('button').removeClass('submiting').after($('<p class="success">Đăng bài thành công!</p>'));
                 }                
                 reset_field();
+                console.log(result);
             }
         });
 

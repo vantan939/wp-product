@@ -800,9 +800,32 @@ function update_product_checkbox_field($request, $id_post) {
 	}	
 }
 
+function update_thumbnail_product($request, $id_post) {
+	$upload_dir = wp_upload_dir();
+	$i = 1;
+	$picture = $request['thumbnail'];
+	$new_file_path = $upload_dir['path'] . '/' . $picture['name'];
+	$new_file_mime = mime_content_type( $picture['tmp_name'] );
+	while( file_exists( $new_file_path ) ) {
+		$i++;
+		$new_file_path = $upload_dir['path'] . '/' . $i . '_' . $picture['name'];
+	}
+	if( move_uploaded_file( $picture['tmp_name'], $new_file_path ) ) {
+		$upload_id = wp_insert_attachment( array(
+			'guid'           => $new_file_path, 
+			'post_mime_type' => $new_file_mime,
+			'post_title'     => preg_replace( '/\.[^.]+$/', '', $picture['name'] ),
+			'post_content'   => '',
+			'post_status'    => 'inherit'
+		), $new_file_path );
+		wp_update_attachment_metadata( $upload_id, wp_generate_attachment_metadata( $upload_id, $new_file_path ) );
+	}
+}
+
 function upload_post_product() {
 	$result = array();
-	if($_SERVER['REQUEST_METHOD'] === 'POST') {
+	// print_r($_FILES);
+	if(isset($_REQUEST)) {
 		// print_r($_REQUEST);
 		// return;
 		$post_array = array(
@@ -814,6 +837,7 @@ function upload_post_product() {
 		update_acf_fields($_REQUEST, $id_post);
 		update_cat_field($_REQUEST, $id_post);
 		update_product_checkbox_field($_REQUEST, $id_post);
+		update_thumbnail_product($_FILES, $id_post);
 		$result['success'] = 1;
 	}else {
 		$result['success'] = 0;
