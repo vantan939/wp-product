@@ -34,7 +34,7 @@ jQuery(document).ready(function($) {
             data: formData,
             processData: false,
             contentType: false,
-            // dataType: 'JSON',
+            dataType: 'JSON',
             success: function (result) {
                 if(result.success) {
                     $this.find('button').removeClass('submiting').after($('<p class="success">Đăng bài thành công!</p>'));

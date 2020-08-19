@@ -769,56 +769,108 @@ add_action('init', 'include_jQuery');
 /**
 * Upload post product
 **/
-// Submit Dang bai
-function update_acf_fields($request, $id_post) {
-	update_field('price', $request['price'], $id_post);
-	update_field('phone', $request['phone'], $id_post);
-	update_field('description', $request['description'], $id_post);
-	update_field('year', $request['year'], $id_post);
-	update_field('height', $request['height'], $id_post);
-	update_field('weight', $request['weight'], $id_post);
-	update_field('params', $request['params'], $id_post);
-	update_field('country', $request['country'], $id_post);
-	update_field('address', $request['address'], $id_post);
-	update_field('time', $request['time'], $id_post);
-	update_field('service', $request['service'], $id_post);
-}
-
-function update_cat_field($request, $id_post) {
-	wp_set_post_categories($id_post, $request['category']);	
-}
-
-function update_product_checkbox_field($request, $id_post) {
-	if(isset($request['hot'])) {
-		update_field('hot', 1, $id_post);
+class Upload_Post_Product {
+	function __construct($req, $file, $id_post) {
+		$this->update_acf_fields($req, $id_post);
+		$this->update_cat_field($req, $id_post);
+		$this->update_checkbox_field($req, $id_post);
+		$this->update_thumbnail($file['thumbnail'], $id_post);
+		$this->update_video($file['video'], $id_post);
+		$this->update_gallery($file['gallery'], $id_post);
 	}
-	if(isset($request['confirmed'])) {
-		update_field('confirmed', 1, $id_post);
-	}
-	if(isset($request['confirmed_copy'])) {
-		update_field('confirmed_copy', 1, $id_post);
-	}	
-}
 
-function update_thumbnail_product($request, $id_post) {
-	$upload_dir = wp_upload_dir();
-	$i = 1;
-	$picture = $request['thumbnail'];
-	$new_file_path = $upload_dir['path'] . '/' . $picture['name'];
-	$new_file_mime = mime_content_type( $picture['tmp_name'] );
-	while( file_exists( $new_file_path ) ) {
-		$i++;
-		$new_file_path = $upload_dir['path'] . '/' . $i . '_' . $picture['name'];
+	function update_acf_fields($req, $id_post) {
+		update_field('price', $req['price'], $id_post);
+		update_field('phone', $req['phone'], $id_post);
+		update_field('description', $req['description'], $id_post);
+		update_field('year', $req['year'], $id_post);
+		update_field('height', $req['height'], $id_post);
+		update_field('weight', $req['weight'], $id_post);
+		update_field('params', $req['params'], $id_post);
+		update_field('country', $req['country'], $id_post);
+		update_field('address', $req['address'], $id_post);
+		update_field('time', $req['time'], $id_post);
+		update_field('service', $req['service'], $id_post);
 	}
-	if( move_uploaded_file( $picture['tmp_name'], $new_file_path ) ) {
-		$upload_id = wp_insert_attachment( array(
-			'guid'           => $new_file_path, 
-			'post_mime_type' => $new_file_mime,
-			'post_title'     => preg_replace( '/\.[^.]+$/', '', $picture['name'] ),
-			'post_content'   => '',
-			'post_status'    => 'inherit'
-		), $new_file_path );
-		wp_update_attachment_metadata( $upload_id, wp_generate_attachment_metadata( $upload_id, $new_file_path ) );
+	
+	function update_cat_field($req, $id_post) {
+		wp_set_post_categories($id_post, $req['category']);	
+	}
+	
+	function update_checkbox_field($req, $id_post) {
+		if(isset($req['hot'])) {
+			update_field('hot', 1, $id_post);
+		}
+		if(isset($req['confirmed'])) {
+			update_field('confirmed', 1, $id_post);
+		}
+		if(isset($req['confirmed_copy'])) {
+			update_field('confirmed_copy', 1, $id_post);
+		}	
+	}
+	
+	function upload_file_to_media($req) {
+		$upload_dir = wp_upload_dir();
+		$i = 1;
+		$file = $req;
+		$new_file_path = $upload_dir['path'] . '/' . $file['name'];
+		$new_file_mime = mime_content_type( $file['tmp_name'] );
+		while( file_exists( $new_file_path ) ) {
+			$i++;
+			$new_file_path = $upload_dir['path'] . '/' . $i . '_' . $file['name'];
+		}
+		if( move_uploaded_file( $file['tmp_name'], $new_file_path ) ) {
+			$upload_id = wp_insert_attachment( array(
+				'guid'           => $new_file_path, 
+				'post_mime_type' => $new_file_mime,
+				'post_title'     => preg_replace( '/\.[^.]+$/', '', $file['name'] ),
+				'post_content'   => '',
+				'post_status'    => 'inherit'
+			), $new_file_path );
+			wp_update_attachment_metadata( $upload_id, wp_generate_attachment_metadata( $upload_id, $new_file_path ) );		
+			return $upload_id;
+		}
+		return;	
+	}
+	
+	function update_thumbnail($req, $id_post) {
+		$upload_id = $this->upload_file_to_media($req);
+		set_post_thumbnail($id_post, $upload_id);	
+	}
+	
+	function update_video($req, $id_post) {
+		if(!empty($req['name'])) {
+			$upload_id = $this->upload_file_to_media($req);
+			update_post_meta( $id_post, 'video', $upload_id );
+		}
+	}
+
+	function update_gallery($req, $id_post) {
+		$upload_ids = array();
+		if(!empty($req)) {
+			$files = array_map(array($this, 'RemapFilesArray'),
+				$req['name'],
+				$req['type'],
+				$req['tmp_name'],
+				$req['error'],
+				$req['size']
+			);
+			foreach($files as $file) {
+				$upload_id = $this->upload_file_to_media($file);
+				$upload_ids[] = $upload_id;
+			}
+			update_post_meta( $id_post, 'gallery_image', $upload_ids );
+		}
+	}
+
+	function RemapFilesArray($name, $type, $tmp_name, $error, $size) {
+		return array(
+			'name' => $name,
+			'type' => $type,
+			'tmp_name' => $tmp_name,
+			'error' => $error,
+			'size' => $size,
+		);
 	}
 }
 
@@ -826,18 +878,13 @@ function upload_post_product() {
 	$result = array();
 	// print_r($_FILES);
 	if(isset($_REQUEST)) {
-		// print_r($_REQUEST);
-		// return;
 		$post_array = array(
 			'post_title' => wp_strip_all_tags( $_POST['title'] ),
 			'post_content' => '<!-- wp:paragraph -->'.$_REQUEST['content'].'<!-- /wp:paragraph -->',
 			'post_status'   => 'publish'
 		);
 		$id_post = wp_insert_post($post_array);
-		update_acf_fields($_REQUEST, $id_post);
-		update_cat_field($_REQUEST, $id_post);
-		update_product_checkbox_field($_REQUEST, $id_post);
-		update_thumbnail_product($_FILES, $id_post);
+		new Upload_Post_Product($_REQUEST, $_FILES, $id_post);
 		$result['success'] = 1;
 	}else {
 		$result['success'] = 0;
