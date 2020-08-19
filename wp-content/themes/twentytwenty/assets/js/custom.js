@@ -71,7 +71,7 @@ jQuery(document).ready(function($) {
         e.preventDefault();
         $this = $(this);
         if(validate_form() > 0) {
-            $this.find('button').after($('<p class="error">Có lỗi xảy ra. Vui lòng kiểm tra lại.</p>'));
+            $this.find('button').after($('<p class="error msg">Có lỗi xảy ra. Vui lòng kiểm tra lại.</p>'));
             return;
         }
         
