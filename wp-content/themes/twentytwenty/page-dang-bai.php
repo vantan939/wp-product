@@ -34,15 +34,15 @@ $cats = get_categories($args);
                 </div>
                 <div class="post-field">
                     <label>Ảnh đại diện <span class="rq">*</span></label>
-                    <input type="file" name="thumbnail" class="rq-field" />
+                    <input type="file" name="thumbnail" class="rq-field thumbnail-field" />
                 </div>
                 <div class="post-field">
                     <label>Hình ảnh minh họa <span class="rq">*</span></label>
-                    <input type="file" name="gallery[]" multiple class="rq-field" />
+                    <input type="file" name="gallery[]" multiple class="rq-field gallery-field" />
                 </div>
                 <div class="post-field">
                     <label>Video sản phẩm</label>
-                    <input type="file" name="video" />
+                    <input type="file" name="video" class="video-field" />
                 </div>
                 <div class="post-field">
                     <input type="checkbox" value="1" name="hot" id="hot"> <label for="hot">Sản phẩm hot</label>

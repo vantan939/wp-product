@@ -877,14 +877,14 @@ class Upload_Post_Product {
 function upload_post_product() {
 	$result = array();
 	// print_r($_FILES);
-	if(isset($_REQUEST)) {
+	if(isset($_POST)) {
 		$post_array = array(
 			'post_title' => wp_strip_all_tags( $_POST['title'] ),
-			'post_content' => '<!-- wp:paragraph -->'.$_REQUEST['content'].'<!-- /wp:paragraph -->',
+			'post_content' => '<!-- wp:paragraph -->'.$_POST['content'].'<!-- /wp:paragraph -->',
 			'post_status'   => 'publish'
 		);
 		$id_post = wp_insert_post($post_array);
-		new Upload_Post_Product($_REQUEST, $_FILES, $id_post);
+		new Upload_Post_Product($_POST, $_FILES, $id_post);
 		$result['success'] = 1;
 	}else {
 		$result['success'] = 0;
