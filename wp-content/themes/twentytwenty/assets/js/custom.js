@@ -61,7 +61,7 @@ jQuery(document).ready(function($) {
     }
 
     function reset_field() {
-        $('.post-upload form').find('input[type="text"], select, textarea').val('');
+        $('.post-upload form').find('input[type="text"], input[type="file"], select, textarea').val('');
         $('.post-upload form').find('input[type="checkbox"]').prop('checked', false);;
     }
 

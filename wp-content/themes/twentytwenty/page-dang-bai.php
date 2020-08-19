@@ -63,7 +63,7 @@ $cats = get_categories($args);
                 </div>
                 <div class="post-field">
                     <label>Mô tả ngắn</label>
-                    <input type="text" name="description" />
+                    <textarea name="description" id="" cols="30" rows="10"></textarea>                    
                 </div>
                 <div class="post-field">
                     <label>Năm sản xuất</label>
