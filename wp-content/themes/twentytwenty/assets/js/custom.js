@@ -53,7 +53,7 @@ jQuery(document).ready(function($) {
                     error.push(index);
                     $(this).after($('<p class="error">Định dạng không hợp lệ!</p>'));
                 }
-                if((this.files[0].size)/1024/1024 > 1 && (regex.test(file))) {
+                if((this.files[0].size)/1024/1024 > 100 && (regex.test(file))) {
                     error.push(index);
                     $(this).after($('<p class="error">Dung lượng tối đa 100MB.</p>'));
                 }
