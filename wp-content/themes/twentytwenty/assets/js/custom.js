@@ -9,7 +9,7 @@ jQuery(document).ready(function($) {
                 $(this).after($('<p class="error">Trường này không được bỏ trống!</p>'));
             }
         });
-        form.find('.thumbnail-field').change(function(index) {
+        form.find('.thumbnail-field').each(function(index) {
             $(this).nextAll('.error').remove();
             var file = $(this).val().toLowerCase();
             var regex = new RegExp("(.*?)\.(png|jpg|jpeg)$");
@@ -24,7 +24,7 @@ jQuery(document).ready(function($) {
                 }
             }
         });
-        form.find('.gallery-field').change(function(index) {
+        form.find('.gallery-field').each(function(index) {
             $(this).nextAll('.error').remove();
             var files = $(this)[0].files;
             var regex = new RegExp("(.*?)\.(png|jpg|jpeg)$");
@@ -32,17 +32,19 @@ jQuery(document).ready(function($) {
             if(files != '') {
                 for (var i = 0; i < files.length; i++) {                    
                     if (!(regex.test(files[i].name.toLowerCase()))) {
+                        error.push(index);
                         error_field.push('format');
                         $(this).after($('<p class="error">Định dạng không hợp lệ!</p>'));
                     }
                     if((files[i].size)/1024/1024 > 1 && (files[i].name.toLowerCase()) && !error_field.includes('format')) {
+                        error.push(index);
                         error_field.push('size');
                         $(this).after($('<p class="error">Dung lượng tối đa 1MB.</p>'));
                     }
                 }
             }
         });
-        form.find('.video-field').change(function(index) {
+        form.find('.video-field').each(function(index) {
             $(this).nextAll('.error').remove();
             var file = $(this).val().toLowerCase();
             var regex = new RegExp("(.*?)\.(mp4)$");
