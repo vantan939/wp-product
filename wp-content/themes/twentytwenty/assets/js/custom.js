@@ -156,10 +156,10 @@ jQuery(document).ready(function($) {
                         self.reset_field();
                         if(formData.get('status') == 'update') {
                             setTimeout(function(){ 
-                                // location.reload();
+                                location.reload();
                             }, 1000);
                         }
-                        console.log(result);
+                        // console.log(result);
                     }
                 });
         
