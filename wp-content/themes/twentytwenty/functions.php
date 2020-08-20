@@ -775,8 +775,8 @@ class Upload_Post_Product {
 		$this->update_cat_field($req, $id_post);
 		$this->update_checkbox_field($req, $id_post);
 		$this->update_thumbnail($file['thumbnail'], $id_post);
-		$this->update_video($file['video'], $id_post);
-		$this->update_gallery($file['gallery'], $id_post);
+		$this->update_video($file['video'], $req, $id_post);
+		$this->update_gallery($file['gallery'], $req, $id_post);
 	}
 
 	function update_acf_fields($req, $id_post) {
@@ -833,34 +833,40 @@ class Upload_Post_Product {
 		return;	
 	}
 	
-	function update_thumbnail($req, $id_post) {
-		$upload_id = $this->upload_file_to_media($req);
+	function update_thumbnail($file, $id_post) {
+		$upload_id = $this->upload_file_to_media($file);
 		set_post_thumbnail($id_post, $upload_id);	
 	}
 	
-	function update_video($req, $id_post) {
-		if(!empty($req['name'])) {
-			$upload_id = $this->upload_file_to_media($req);
-			update_post_meta( $id_post, 'video', $upload_id );
+	function update_video($file, $req, $id_post) {
+		if(!empty($file['name'])) {
+			$upload_id = $this->upload_file_to_media($file);
+			update_post_meta($id_post, 'video', $upload_id );
+		}
+		if(isset($req['video_old_id']) && empty($req['video_old_id'])) {
+			delete_post_meta($id_post, 'video');
 		}
 	}
 
-	function update_gallery($req, $id_post) {
+	function update_gallery($file, $req, $id_post) {
 		$upload_ids = array();
-		if(!empty($req)) {
+		if(!empty($file['name'][0])) {
 			$files = array_map(array($this, 'RemapFilesArray'),
-				$req['name'],
-				$req['type'],
-				$req['tmp_name'],
-				$req['error'],
-				$req['size']
+				$file['name'],
+				$file['type'],
+				$file['tmp_name'],
+				$file['error'],
+				$file['size']
 			);
 			foreach($files as $file) {
 				$upload_id = $this->upload_file_to_media($file);
 				$upload_ids[] = $upload_id;
-			}
-			update_post_meta( $id_post, 'gallery_image', $upload_ids );
+			}			
 		}
+		if(!empty($req['gallery_old_ids'])) {
+			$upload_ids = array_unique(array_merge($upload_ids, $req['gallery_old_ids']));
+		}
+		update_post_meta( $id_post, 'gallery_image', $upload_ids );
 	}
 
 	function RemapFilesArray($name, $type, $tmp_name, $error, $size) {
@@ -878,12 +884,23 @@ function upload_post_product() {
 	$result = array();
 	// print_r($_FILES);
 	if(isset($_POST)) {
-		$post_array = array(
-			'post_title' => wp_strip_all_tags( $_POST['title'] ),
-			'post_content' => '<!-- wp:paragraph -->'.$_POST['content'].'<!-- /wp:paragraph -->',
-			'post_status'   => 'publish'
-		);
-		$id_post = wp_insert_post($post_array);
+		if(empty($_POST['post_id'])) {
+			$post_array = array(
+				'post_title' => wp_strip_all_tags( $_POST['title'] ),
+				'post_content' => '<!-- wp:paragraph -->'.$_POST['content'].'<!-- /wp:paragraph -->',
+				'post_status'   => 'publish'
+			);
+			$id_post = wp_insert_post($post_array);
+		}else {
+			$id_post = $_POST['post_id'];
+			$post_array = array(
+				'ID' => $id_post,
+				'post_title' => wp_strip_all_tags( $_POST['title'] ),
+				'post_content' => '<!-- wp:paragraph -->'.$_POST['content'].'<!-- /wp:paragraph -->',
+			);
+			wp_update_post($post_array);
+		}
+		
 		new Upload_Post_Product($_POST, $_FILES, $id_post);
 		$result['success'] = 1;
 	}else {

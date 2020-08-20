@@ -1,4 +1,8 @@
-<?php 
+<?php
+if(!isset($_GET['id'])) {
+    wp_redirect(home_url('/danh-sach-bai'));
+    exit;
+}
 get_header();
 ?>
 

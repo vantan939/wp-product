@@ -58,6 +58,46 @@
     margin-bottom: 17px;
 }
 
+.post-upload .post-field .img-prev {
+    margin-top: 10px;
+    display: flex;
+}
+
+.post-upload .post-field .img-prev .prev-item {
+    position: relative;
+    width: 150px;
+}
+
+.post-upload .post-field .img-prev .prev-item:not(:first-child) {
+    margin: 0 10px;
+}
+
+.post-upload .post-field .img-prev .delete {
+    position: absolute;
+    cursor: pointer;
+    right: -5px;
+    top: -7px;
+    display: none;
+}
+
+.post-upload .post-field .prev-item:hover .delete {
+    display: block;
+}
+
+.post-upload .post-field .video-prev .prev-item {
+    width: 205px;
+}
+
+.post-upload .post-field .video-prev .prev-item a {
+    display: flex;
+    text-decoration: none;
+    line-height: 1.5;
+}
+
+.post-upload .post-field .video-prev .prev-item a .video-img-prev {
+    width: 60px;
+}
+
 .post-upload button {
     text-decoration: none;
     position: relative;
