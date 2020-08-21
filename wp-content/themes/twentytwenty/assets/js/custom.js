@@ -109,7 +109,7 @@ jQuery(document).ready(function($) {
             form.find('.rq-field').each(function(index) {
                 if(!$(this).hasClass('media')) {
                     if($(this).val() == '') {
-                        if(!$(this).attr('name') == 'content') {
+                        if($(this).attr('name') != 'content') {
                             $(this).after($('<p class="error">Trường này không được bỏ trống!</p>'));
                         }else {
                             $(this).nextAll('#cke_content').after($('<p class="error">Trường này không được bỏ trống!</p>'));
