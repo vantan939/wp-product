@@ -141,7 +141,8 @@ jQuery(document).ready(function($) {
 
         reset_field: function() {
             $('.post-upload form').find('input[type="text"], input[type="file"], select, textarea').val('');
-            $('.post-upload form').find('input[type="checkbox"]').prop('checked', false);;
+            $('.post-upload form').find('input[type="checkbox"]').prop('checked', false);
+            CKEDITOR.instances['content'].setData('');
         },
 
         submit_form: function() {

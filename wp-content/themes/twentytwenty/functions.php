@@ -887,10 +887,12 @@ function upload_post_product() {
 	$result = array();
 	// print_r($_FILES);
 	if(isset($_POST)) {
+		$start_p = ['<p>', '</p>'];
+		$end_p = ['<!-- wp:paragraph --><p>', '</p><!-- /wp:paragraph -->'];
 		if(empty($_POST['post_id'])) {
 			$post_array = array(
 				'post_title' => wp_strip_all_tags( $_POST['title'] ),
-				'post_content' => '<!-- wp:paragraph -->'.$_POST['content'].'<!-- /wp:paragraph -->',
+				'post_content' => str_replace($start_p, $end_p, $_POST['content']),
 				'post_status'   => 'publish'
 			);
 			$id_post = wp_insert_post($post_array);
@@ -899,7 +901,7 @@ function upload_post_product() {
 			$post_array = array(
 				'ID' => $id_post,
 				'post_title' => wp_strip_all_tags( $_POST['title'] ),
-				'post_content' => '<!-- wp:paragraph -->'.$_POST['content'].'<!-- /wp:paragraph -->',
+				'post_content' => str_replace($start_p, $end_p, $_POST['content']),
 			);
 			wp_update_post($post_array);
 		}
