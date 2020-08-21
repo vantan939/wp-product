@@ -8,7 +8,14 @@ jQuery(document).ready(function($) {
         },
 
         loadCkeditor: function() {
-            if($('.post-upload form').length > 0) CKEDITOR.replace( 'content' );            
+            if($('.post-upload form').length > 0)
+            CKEDITOR.replace('content', {
+                on: {
+                    change: function() {
+                        this.updateElement();    
+                    }
+                }
+            });
         },
 
         media_preview_handle: function() {
@@ -102,7 +109,11 @@ jQuery(document).ready(function($) {
             form.find('.rq-field').each(function(index) {
                 if(!$(this).hasClass('media')) {
                     if($(this).val() == '') {
-                        $(this).after($('<p class="error">Trường này không được bỏ trống!</p>'));
+                        if(!$(this).attr('name') == 'content') {
+                            $(this).after($('<p class="error">Trường này không được bỏ trống!</p>'));
+                        }else {
+                            $(this).nextAll('#cke_content').after($('<p class="error">Trường này không được bỏ trống!</p>'));
+                        }                        
                     }
                 }
                 if($(this).hasClass('thumbnail-field')) {
