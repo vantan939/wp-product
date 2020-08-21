@@ -1,9 +1,14 @@
 jQuery(document).ready(function($) {
     ({		
 		init: function() {
+            this.loadCkeditor();
             this.submit_form();
             this.validate_media_fields_load();
             this.media_preview_handle();
+        },
+
+        loadCkeditor: function() {
+            if($('.post-upload form').length > 0) CKEDITOR.replace( 'content' );            
         },
 
         media_preview_handle: function() {
