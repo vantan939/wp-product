@@ -37,7 +37,7 @@ jQuery(document).ready(function($) {
             $('.video-prev .delete').click(function() {
                 $(this).parents('.post-field').find('.media').show();
                 $(this).parents('.video-prev').hide();
-                $(this).parents('.video-prev').find('.media').val('');
+                $(this).parents('.video-prev').find('input').val('');
             });
         },
 
