@@ -3,6 +3,51 @@
     margin: 0 auto;
 }
 
+.wrap.list-post {
+    max-width: 900px;
+}
+
+table.list-post {
+    table-layout: fixed;
+}
+
+.navigation {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.navigation li a,
+.navigation li a:hover,
+.navigation li.active a,
+.navigation li.disabled {
+    color: #fff;
+    text-decoration:none;
+}
+ 
+.navigation li {
+    display: inline-block;
+    margin: 0;
+}
+
+.navigation li:not(:last-child) {
+    margin-right: 10px;
+}
+ 
+.navigation li a,
+.navigation li a:hover,
+.navigation li.active a,
+.navigation li.disabled {
+    background-color: #6FB7E9;
+    cursor: pointer;
+    display: block;
+    padding: 6px 13px;
+}
+ 
+.navigation li a:hover,
+.navigation li.active a {
+    background-color: #3C8DC5;
+}
+
 .post-upload {
     font-size: 14px;
 }
