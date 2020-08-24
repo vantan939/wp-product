@@ -776,6 +776,7 @@ class Upload_Post_Product {
 	function __construct($req, $file, $id_post) {
 		$this->update_acf_fields($req, $id_post);
 		$this->update_cat_field($req, $id_post);
+		$this->update_tags_field($req, $id_post);
 		$this->update_checkbox_field($req, $id_post);
 		$this->update_thumbnail($file['thumbnail'], $id_post);
 		$this->update_video($file['video'], $req, $id_post);
@@ -794,6 +795,10 @@ class Upload_Post_Product {
 		update_field('address', $req['address'], $id_post);
 		update_field('time', $req['time'], $id_post);
 		update_field('service', $req['service'], $id_post);
+	}
+
+	function update_tags_field($req, $id_post) {
+		wp_set_post_tags($id_post, $req['tags'], true);
 	}
 	
 	function update_cat_field($req, $id_post) {

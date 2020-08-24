@@ -10,6 +10,13 @@ if(isset($_GET['id'])) {
     $post_title = get_the_title(ID_POST);
     $post_content = apply_filters('the_content', get_post_field('post_content', ID_POST));    
     $cat_id = get_the_category(ID_POST)[0]->term_id;
+    $tags = get_the_tags(ID_POST);
+    $tags_arr = [];
+    if(!empty($tags)) {
+        foreach($tags as $tag) {
+            $tags_arr[] = $tag->name; 
+        }
+    }
 
     function get_val_meta($name_meta) {
         return get_post_meta(ID_POST, $name_meta, true);
@@ -107,6 +114,10 @@ if(isset($_GET['id'])) {
             <input type="checkbox" value="1" name="confirmed_copy" id="confirmed_copy" 
                 <?php echo !empty(ID_POST) && get_val_meta('confirmed_copy') ? 'checked' : ''; ?> 
             > <label for="confirmed_copy">Sản phẩm kiểm định</label>
+        </div>
+        <div class="post-field">
+            <label>Tags</label>
+            <input type="text" name="tags" placeholder="Ví dụ: tag1, tag2" value="<?php echo !empty($tags_arr) ? implode (", ", $tags_arr) : ''; ?>" />
         </div>
         <div class="post-field">
             <label>Giá</label>
