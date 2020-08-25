@@ -116,6 +116,13 @@ if(isset($_GET['id'])) {
             > <label for="confirmed_copy">Sản phẩm kiểm định</label>
         </div>
         <div class="post-field">
+            <label>Kiểm định/Có VIDEO</label>
+            <select name="video_on">
+                <option <?php echo (!empty(ID_POST) && get_val_meta('video_on') == 'confirm') ? 'selected' : ''; ?> value="confirm">Kiểm định</option>
+                <option <?php echo (!empty(ID_POST) && get_val_meta('video_on') == 'video') ? 'selected' : ''; ?> value="video">Có VIDEO</option>
+            </select>
+        </div>
+        <div class="post-field">
             <label>Tags</label>
             <input type="text" name="tags" placeholder="Ví dụ: tag1, tag2" value="<?php echo !empty($tags_arr) ? implode (", ", $tags_arr) : ''; ?>" />
         </div>
@@ -161,7 +168,7 @@ if(isset($_GET['id'])) {
         </div>
         <div class="post-field">
             <label>Dịch vụ</label>
-            <input type="text" name="service" value="<?php echo !empty(ID_POST) ? get_val_meta('service') : ''; ?>" />
+            <textarea name="service" id="" cols="30" rows="10"><?php echo !empty(ID_POST) ? get_val_meta('service') : ''; ?></textarea>                                
         </div>
         <div class="post-field">
             <input type="hidden" name="post_id" value="<?php echo !empty(ID_POST) ? ID_POST : ''; ?>">

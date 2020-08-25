@@ -795,6 +795,7 @@ class Upload_Post_Product {
 		update_field('address', $req['address'], $id_post);
 		update_field('time', $req['time'], $id_post);
 		update_field('service', $req['service'], $id_post);
+		update_field('video_on', $req['video_on'], $id_post);
 	}
 
 	function update_tags_field($req, $id_post) {
